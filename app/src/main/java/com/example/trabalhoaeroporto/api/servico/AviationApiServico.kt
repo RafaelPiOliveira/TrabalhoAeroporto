@@ -1,0 +1,65 @@
+package com.example.trabalhoaeroporto.api.servico
+
+import com.example.trabalhoaeroporto.api.VooResponse
+import com.example.trabalhoaeroporto.constantes.Constants
+import retrofit2.http.GET
+import retrofit2.http.Query
+
+/**
+ * Interface Retrofit para comunicar com a AviationStack API
+ *
+ * Documentação: https://aviationstack.com/documentation
+ */
+interface AviationApiService {
+
+    /**
+     * Obter voos em tempo real
+     *
+     * @param apiKey - Chave da API (já definida nas constantes)
+     * @param limit - Número de resultados por página (default: 20)
+     * @param offset - Offset para paginação
+     */
+    @GET("flights")
+    suspend fun getVoos(
+        @Query("access_key") apiKey: String = Constants.API_KEY,
+        @Query("limit") limit: Int = 20,
+        @Query("offset") offset: Int = 0
+    ): VooResponse
+
+    /**
+     * Pesquisar voos por número de voo
+     *
+     * @param flightIata - Código IATA do voo (ex: "AA100")
+     */
+    @GET("flights")
+    suspend fun pesquisarVoo(
+        @Query("access_key") apiKey: String = Constants.API_KEY,
+        @Query("flight_iata") flightIata: String
+    ): VooResponse
+
+    /**
+     * Obter voos de um aeroporto específico (partidas)
+     *
+     * @param depIata - Código IATA do aeroporto de partida (ex: "JFK")
+     */
+    @GET("flights")
+    suspend fun getVoosPartida(
+        @Query("access_key") apiKey: String = Constants.API_KEY,
+        @Query("dep_iata") depIata: String,
+        @Query("limit") limit: Int = 20,
+        @Query("offset") offset: Int = 0
+    ): VooResponse
+
+    /**
+     * Obter voos de um aeroporto específico (chegadas)
+     *
+     * @param arrIata - Código IATA do aeroporto de chegada (ex: "LAX")
+     */
+    @GET("flights")
+    suspend fun getVoosChegada(
+        @Query("access_key") apiKey: String = Constants.API_KEY,
+        @Query("arr_iata") arrIata: String,
+        @Query("limit") limit: Int = 20,
+        @Query("offset") offset: Int = 0
+    ): VooResponse
+}

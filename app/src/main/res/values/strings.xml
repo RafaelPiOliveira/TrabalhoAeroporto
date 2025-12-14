@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TrabalhoAeroporto</string>
+    <string name="ecra01">ecra1\n</string>
+    <string name="ecra02">ecra2</string>
+    <string name="ecra03">ecra3</string>
+    <string name="ecra04">ecra4</string>
+    <string name="ecra05">ecra5</string>
+</resources>
