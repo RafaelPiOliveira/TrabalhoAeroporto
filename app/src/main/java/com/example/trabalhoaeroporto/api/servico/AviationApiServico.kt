@@ -22,6 +22,7 @@ interface AviationApiService {
     @GET("flights")
     suspend fun getVoos(
         @Query("access_key") apiKey: String = Constants.API_KEY,
+        @Query("dep_iata") depIata: String = "OPO",
         @Query("limit") limit: Int = 20,
         @Query("offset") offset: Int = 0
     ): VooResponse

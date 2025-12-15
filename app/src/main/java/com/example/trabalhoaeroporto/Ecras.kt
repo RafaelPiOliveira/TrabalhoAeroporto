@@ -69,7 +69,7 @@ fun Ecra02() {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Funcionalidade em desenvolvimento\n\n" + "Aqui poderás guardar os teus voos favoritos!",
+            text = "Aqui poderás guardar os teus voos favoritos!",
             fontSize = 16.sp,
             color = Color.Gray,
             textAlign = TextAlign.Center
@@ -181,7 +181,7 @@ fun Ecra04() {
             .padding(16.dp)
     ) {
         Text(
-            text = "🛫 Partidas",
+            text = "Partidas",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
@@ -267,7 +267,7 @@ fun Ecra05() {
             .padding(16.dp)
     ) {
         Text(
-            text = "🛬 Chegadas",
+            text = "Chegadas",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
