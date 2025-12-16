@@ -1,8 +1,10 @@
 package com.example.trabalhoaeroporto.componentes
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -11,97 +13,175 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.trabalhoaeroporto.api.Voo
+import com.example.trabalhoaeroporto.ui.theme.AmareloAtraso
+import com.example.trabalhoaeroporto.ui.theme.AzulAeroporto
+import com.example.trabalhoaeroporto.ui.theme.AzulAterrado
+import com.example.trabalhoaeroporto.ui.theme.AzulCeu
+import com.example.trabalhoaeroporto.ui.theme.BrancoCard
+import com.example.trabalhoaeroporto.ui.theme.CinzaClaro
+import com.example.trabalhoaeroporto.ui.theme.CinzaEscuro
+import com.example.trabalhoaeroporto.ui.theme.CinzaMedio
+import com.example.trabalhoaeroporto.ui.theme.Laranja
+import com.example.trabalhoaeroporto.ui.theme.VerdeAtivo
+import com.example.trabalhoaeroporto.ui.theme.Vermelho
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
+
+    // Função para formatar hora (de ISO 8601 para HH:mm)
+    fun formatarHora(isoDate: String?): String {
+        if (isoDate == null) return "--:--"
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+            val date = inputFormat.parse(isoDate)
+            outputFormat.format(date ?: return "--:--")
+        } catch (e: Exception) {
+            "--:--"
+        }
+    }
+
+    // Cor do status
+    val corStatus = when(voo.flightStatus?.lowercase()) {
+        "active", "scheduled" -> VerdeAtivo
+        "landed" -> AzulAterrado
+        "cancelled" -> Vermelho
+        "delayed" -> AmareloAtraso
+        else -> CinzaMedio
+    }
+
+    val textoStatus = when(voo.flightStatus?.lowercase()) {
+        "active" -> "ATIVO"
+        "scheduled" -> "AGENDADO"
+        "landed" -> "ATERRADO"
+        "cancelled" -> "CANCELADO"
+        "delayed" -> "ATRASADO"
+        else -> voo.flightStatus?.uppercase() ?: "N/A"
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 6.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = BrancoCard)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            // Número do voo e companhia aérea
+            // Header: Número do voo + Companhia + Status
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = voo.flight?.iata ?: "N/A",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-
-                Text(
-                    text = voo.airline?.name ?: "Desconhecida",
-                    fontSize = 14.sp,
-                    color = Color.Gray
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Status do voo
-            Text(
-                text = "Status: ${voo.flightStatus ?: "N/A"}",
-                fontSize = 12.sp,
-                color = when(voo.flightStatus) {
-                    "active" -> Color(0xFF4CAF50) // Verde
-                    "landed" -> Color(0xFF2196F3) // Azul
-                    "cancelled" -> Color(0xFFF44336) // Vermelho
-                    else -> Color.Gray
-                },
-                fontWeight = FontWeight.Bold
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Partida
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
                 Column(modifier = Modifier.weight(1f)) {
+                    // Número do voo
                     Text(
-                        text = "PARTIDA",
-                        fontSize = 10.sp,
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = voo.departure?.iata ?: "N/A",
-                        fontSize = 16.sp,
+                        text = voo.flight?.iata ?: "N/A",
+                        fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = AzulAeroporto
                     )
+
+                    // Companhia aérea
                     Text(
-                        text = voo.departure?.airport ?: "",
-                        fontSize = 11.sp,
-                        color = Color.Gray,
-                        maxLines = 1
+                        text = voo.airline?.name ?: "Companhia Desconhecida",
+                        fontSize = 13.sp,
+                        color = CinzaMedio
                     )
                 }
 
-                Text(
-                    text = "→",
-                    fontSize = 24.sp,
-                    color = Color.Gray,
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                )
+                // Badge de status
+                Box(
+                    modifier = Modifier
+                        .background(corStatus, RoundedCornerShape(6.dp))
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                ) {
+                    Text(
+                        text = textoStatus,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+            }
 
-                // Chegada
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Rota: Partida → Chegada (com horas)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // PARTIDA
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Text(
+                        text = "PARTIDA",
+                        fontSize = 10.sp,
+                        color = CinzaMedio,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    // Hora de partida
+                    Text(
+                        text = formatarHora(voo.departure?.scheduled),
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = AzulAeroporto
+                    )
+
+                    // Código IATA
+                    Text(
+                        text = voo.departure?.iata ?: "N/A",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = CinzaEscuro
+                    )
+
+                    // Nome do aeroporto
+                    Text(
+                        text = voo.departure?.airport ?: "",
+                        fontSize = 11.sp,
+                        color = CinzaMedio,
+                        maxLines = 2
+                    )
+                }
+
+                // Seta
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "✈",
+                        fontSize = 24.sp,
+                        color = AzulCeu
+                    )
+                    Text(
+                        text = "→",
+                        fontSize = 20.sp,
+                        color = CinzaMedio
+                    )
+                }
+
+                // CHEGADA
                 Column(
                     modifier = Modifier.weight(1f),
                     horizontalAlignment = Alignment.End
@@ -109,45 +189,77 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
                     Text(
                         text = "CHEGADA",
                         fontSize = 10.sp,
-                        color = Color.Gray,
+                        color = CinzaMedio,
                         fontWeight = FontWeight.Bold
                     )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    // Hora de chegada
+                    Text(
+                        text = formatarHora(voo.arrival?.scheduled),
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = AzulAeroporto
+                    )
+
+                    // Código IATA
                     Text(
                         text = voo.arrival?.iata ?: "N/A",
-                        fontSize = 16.sp,
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = CinzaEscuro
                     )
+
+                    // Nome do aeroporto
                     Text(
                         text = voo.arrival?.airport ?: "",
                         fontSize = 11.sp,
-                        color = Color.Gray,
-                        maxLines = 1
+                        color = CinzaMedio,
+                        maxLines = 2
                     )
                 }
             }
 
-            // Informações adicionais (portão, terminal)
-            if (voo.departure?.gate != null || voo.departure?.terminal != null) {
+            // Info adicional (Terminal + Portão)
+            if (voo.departure?.terminal != null || voo.departure?.gate != null) {
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Divider(color = CinzaClaro, thickness = 1.dp)
+
                 Spacer(modifier = Modifier.height(8.dp))
-                Row {
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
+                ) {
                     voo.departure?.terminal?.let {
-                        Text(
-                            text = "Terminal: $it",
-                            fontSize = 11.sp,
-                            color = Color.Gray
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
+                        InfoChip("Terminal $it", Laranja)
+                        Spacer(modifier = Modifier.width(8.dp))
                     }
                     voo.departure?.gate?.let {
-                        Text(
-                            text = "Portão: $it",
-                            fontSize = 11.sp,
-                            color = Color.Gray
-                        )
+                        InfoChip("Portão $it", AzulCeu)
                     }
                 }
             }
         }
+    }
+}
+/**
+ * Chip de informação (Terminal, Portão, etc.)
+ */
+@Composable
+fun InfoChip(texto: String, cor: Color) {
+    Box(
+        modifier = Modifier
+            .background(cor.copy(alpha = 0.1f), RoundedCornerShape(4.dp))
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+    ) {
+        Text(
+            text = texto,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Medium,
+            color = cor
+        )
     }
 }

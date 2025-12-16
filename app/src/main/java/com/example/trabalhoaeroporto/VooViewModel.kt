@@ -100,11 +100,4 @@ class VooViewModel @Inject constructor(
             }
         }
     }
-
-    /**
-     * Limpar erro
-     */
-    fun clearError() {
-        _error.value = null
-    }
 }
