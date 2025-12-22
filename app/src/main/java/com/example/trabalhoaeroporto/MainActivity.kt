@@ -30,7 +30,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -76,10 +75,10 @@ fun AppNavigation(navController: NavHostController) {
             Ecra01()
         }
         composable(Destino.Ecra02.route) {
-            Ecra02(viewModel)
+            Ecra02(viewModel,navController)
         }
         composable(Destino.Ecra03.route) {
-            Ecra03(navController, viewModel )
+            Ecra03( viewModel )
         }
         composable(Destino.Ecra04.route) {
             Ecra04()
