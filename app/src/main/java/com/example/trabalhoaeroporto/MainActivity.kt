@@ -29,6 +29,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -68,15 +70,16 @@ fun ProgramaPrincipal() {
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
+    val viewModel: VooViewModel = hiltViewModel()
     NavHost(navController, startDestination = Destino.Ecra01.route) {
         composable(Destino.Ecra01.route) {
             Ecra01()
         }
         composable(Destino.Ecra02.route) {
-            Ecra02()
+            Ecra02(viewModel)
         }
         composable(Destino.Ecra03.route) {
-            Ecra03()
+            Ecra03(navController, viewModel )
         }
         composable(Destino.Ecra04.route) {
             Ecra04()
@@ -119,13 +122,8 @@ fun BottomNavigationBar(navController: NavController, appItems: List<Destino>) {
                 selected = currentRoute == item.route,
                 onClick = {
                     navController.navigate(item.route) {
-                        navController.graph.startDestinationRoute?.let { route ->
-                            popUpTo(route) {
-                                saveState = true
-                            }
-                        }
+                        popUpTo(0) { saveState = false } // limpa tudo
                         launchSingleTop = true
-                        restoreState = true
                     }
                 }
             )

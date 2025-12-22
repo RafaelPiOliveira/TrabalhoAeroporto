@@ -1,9 +1,11 @@
 package com.example.trabalhoaeroporto
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,11 +16,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,17 +34,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.trabalhoaeroporto.componentes.CardVoo
+import com.example.trabalhoaeroporto.componentes.InfoLinha
 import com.example.trabalhoaeroporto.componentes.ListaVoos
+import com.example.trabalhoaeroporto.ui.theme.AmareloAtraso
 import com.example.trabalhoaeroporto.ui.theme.AzulAeroporto
+import com.example.trabalhoaeroporto.ui.theme.AzulCeu
 
 import com.example.trabalhoaeroporto.ui.theme.BrancoCard
 import com.example.trabalhoaeroporto.ui.theme.CinzaClaro
+import com.example.trabalhoaeroporto.ui.theme.CinzaEscuro
 import com.example.trabalhoaeroporto.ui.theme.CinzaMedio
 import com.example.trabalhoaeroporto.ui.theme.Vermelho
 
@@ -65,40 +75,13 @@ fun Ecra01() {
 
 
 @Composable
-fun Ecra02() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "Favoritos",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Aqui poderás guardar os teus voos favoritos!",
-            fontSize = 16.sp,
-            color = Color.Gray,
-            textAlign = TextAlign.Center
-        )
-    }
-}
-
-@Composable
-fun Ecra03() {
-    val viewModel = hiltViewModel<VooViewModel>()
-
-    var aeroportoOrigem by remember { mutableStateOf("OPO") }
-    var aeroportoDestino by remember { mutableStateOf("") }
+fun Ecra02(viewModel: VooViewModel, navController: NavController) {
+    var aeroportoCodigo by remember { mutableStateOf("") }
+    var tipoVoo by remember { mutableStateOf("partidas") } // "partidas" ou "chegadas"
     var mostrarResultados by remember { mutableStateOf(false) }
 
-    val voosIda by viewModel.voosPartida.collectAsState()
-    val voosVolta by viewModel.voosChegada.collectAsState()
+    val voosPartida by viewModel.voosPartida.collectAsState()
+    val voosChegada by viewModel.voosChegada.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
 
@@ -110,10 +93,17 @@ fun Ecra03() {
     ) {
         // Header
         Text(
-            text = "Pesquisa de Voos",
+            text = "Voos em Tempo Real",
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = AzulAeroporto,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        Text(
+            text = "Ver voos que estão a voar AGORA",
+            fontSize = 14.sp,
+            color = CinzaMedio,
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
@@ -127,68 +117,107 @@ fun Ecra03() {
             Column(
                 modifier = Modifier.padding(20.dp)
             ) {
-                // Origem
+                // Campo aeroporto
                 Text(
-                    text = "DE (Origem)",
+                    text = "Aeroporto",
                     fontSize = 12.sp,
                     color = CinzaMedio,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 OutlinedTextField(
-                    value = aeroportoOrigem,
-                    onValueChange = { aeroportoOrigem = it.uppercase() },
+                    value = aeroportoCodigo,
+                    onValueChange = { aeroportoCodigo = it.uppercase() },
                     label = { Text("Código IATA") },
-                    placeholder = { Text("Ex: OPO, LIS, FAO") },
+                    placeholder = { Text("Ex: OPO, LIS, LHR, JFK") },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Ícone de troca
-                Box(
+                // Tipo de voo (Partidas ou Chegadas)
+                Text(
+                    text = "Tipo de Voo",
+                    fontSize = 12.sp,
+                    color = CinzaMedio,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
                     modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
+                    // Botão Partidas
+                    OutlinedButton(
+                        onClick = { tipoVoo = "partidas" },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = if (tipoVoo == "partidas") AzulCeu.copy(alpha = 0.1f) else Color.Transparent
+                        ),
+                        border = BorderStroke(
+                            2.dp,
+                            if (tipoVoo == "partidas") AzulCeu else CinzaMedio
+                        )
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        ) {
+                            Text(
+                                "PARTIDAS",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (tipoVoo == "partidas") AzulCeu else CinzaMedio
+                            )
+                        }
+                    }
 
+                    // Botão Chegadas
+                    OutlinedButton(
+                        onClick = { tipoVoo = "chegadas" },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = if (tipoVoo == "chegadas") AzulCeu.copy(alpha = 0.1f) else Color.Transparent
+                        ),
+                        border = BorderStroke(
+                            2.dp,
+                            if (tipoVoo == "chegadas") AzulCeu else CinzaMedio
+                        )
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        ) {
+                            Text(
+                                "CHEGADAS",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (tipoVoo == "chegadas") AzulCeu else CinzaMedio
+                            )
+                        }
+                    }
                 }
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Destino
-                Text(
-                    text = "PARA (Destino)",
-                    fontSize = 12.sp,
-                    color = CinzaMedio,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                OutlinedTextField(
-                    value = aeroportoDestino,
-                    onValueChange = { aeroportoDestino = it.uppercase() },
-                    label = { Text("Código IATA") },
-                    placeholder = { Text("Ex: KIX (Osaka), LHR (Londres)") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Botão pesquisar
                 Button(
                     onClick = {
-                        if (aeroportoOrigem.isNotBlank() && aeroportoDestino.isNotBlank()) {
-                            viewModel.getVoosPartida(aeroportoOrigem)
-                            viewModel.getVoosChegada(aeroportoDestino)
+                        if (aeroportoCodigo.isNotBlank()) {
+                            if (tipoVoo == "partidas") {
+                                viewModel.getVoosPartida(aeroportoCodigo)
+                            } else {
+                                viewModel.getVoosChegada(aeroportoCodigo)
+                            }
                             mostrarResultados = true
                         }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
-                    enabled = aeroportoOrigem.isNotBlank() &&
-                            aeroportoDestino.isNotBlank() &&
-                            !isLoading,
+                    enabled = aeroportoCodigo.isNotBlank() && !isLoading,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = AzulAeroporto
                     ),
@@ -203,7 +232,7 @@ fun Ecra03() {
                         Text("A pesquisar...", fontSize = 16.sp)
                     } else {
                         Text(
-                            text = "PESQUISAR VOOS",
+                            text = "PESQUISAR",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -211,11 +240,26 @@ fun Ecra03() {
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    text = "Exemplos: OPO→KIX (Osaka), OPO→LHR (Londres), LIS→CDG (Paris)",
-                    fontSize = 11.sp,
-                    color = CinzaMedio
-                )
+
+                // Info sobre limitação
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = AmareloAtraso.copy(alpha = 0.1f)
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Mostra apenas voos a voar AGORA (tempo real)",
+                            fontSize = 11.sp,
+                            color = CinzaEscuro
+                        )
+                    }
+                }
             }
         }
 
@@ -241,87 +285,141 @@ fun Ecra03() {
 
         // Resultados
         if (mostrarResultados) {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                // VOOS DE IDA
-                item {
-                    Text(
-                        text = "VOOS DE IDA: $aeroportoOrigem → $aeroportoDestino",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = AzulAeroporto,
-                        modifier = Modifier.padding(vertical = 12.dp)
-                    )
-                }
+            val voos = if (tipoVoo == "partidas") voosPartida else voosChegada
+            val titulo = if (tipoVoo == "partidas") "PARTIDAS" else "CHEGADAS"
 
-                voosIda?.let { response ->
-                    val voosFiltrados = response.data.filter {
-                        it.departure?.iata?.equals(aeroportoOrigem, ignoreCase = true) == true &&
-                                it.arrival?.iata?.equals(aeroportoDestino, ignoreCase = true) == true
+            voos?.let { response ->
+                if (response.data.isEmpty()) {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = CinzaClaro
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(32.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = "Nenhum voo encontrado",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = CinzaEscuro
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Não há voos a voar AGORA de/para $aeroportoCodigo",
+                                fontSize = 12.sp,
+                                color = CinzaMedio,
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
+                } else {
+                    Column {
+                        Text(
+                            text = "$titulo DE $aeroportoCodigo",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = AzulAeroporto,
+                            modifier = Modifier.padding(vertical = 12.dp)
+                        )
 
-                    if (voosFiltrados.isEmpty()) {
-                        item {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(32.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "Nenhum voo encontrado",
-                                    color = CinzaMedio,
-                                    fontSize = 14.sp
+                        Text(
+                            text = "${response.data.size} voos encontrados",
+                            fontSize = 12.sp,
+                            color = CinzaMedio,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        LazyColumn {
+                            items(response?.data ?: emptyList()) { voo ->
+                                CardVoo(
+                                    voo = voo,
+                                    onClick = {
+                                        viewModel.setVooSelecionado(voo)
+                                        navController.navigate("ecra02")
+                                    }
                                 )
                             }
                         }
-                    } else {
-                        items(voosFiltrados) { voo ->
-                            CardVoo(voo = voo)
-                        }
                     }
                 }
+            }
+        }
+    }
+}
 
-                // VOOS DE VOLTA
-                item {
-                    Spacer(modifier = Modifier.height(24.dp))
-                    Text(
-                        text = "VOOS DE VOLTA: $aeroportoDestino → $aeroportoOrigem",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = AzulAeroporto,
-                        modifier = Modifier.padding(vertical = 12.dp)
-                    )
-                }
+@Composable
+fun Ecra03( viewModel: VooViewModel) {
 
-                voosVolta?.let { response ->
-                    val voosVoltaFiltrados = response.data.filter {
-                        it.departure?.iata?.equals(aeroportoDestino, ignoreCase = true) == true &&
-                                it.arrival?.iata?.equals(aeroportoOrigem, ignoreCase = true) == true
-                    }
+    val voo by viewModel.vooSelecionado.collectAsState()
 
-                    if (voosVoltaFiltrados.isEmpty()) {
-                        item {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(32.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "Nenhum voo encontrado",
-                                    color = CinzaMedio,
-                                    fontSize = 14.sp
-                                )
-                            }
-                        }
-                    } else {
-                        items(voosVoltaFiltrados) { voo ->
-                            CardVoo(voo = voo)
-                        }
-                    }
-                }
+    if (voo == null) {
+        // Caso raro: utilizador entrou direto no ecrã
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Nenhum voo selecionado", color = Color.Gray)
+        }
+        return
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(CinzaClaro)
+            .padding(16.dp)
+    ) {
+
+        Text(
+            text = "Detalhes do Voo",
+            fontSize = 26.sp,
+            fontWeight = FontWeight.Bold,
+            color = AzulAeroporto
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(6.dp),
+            colors = CardDefaults.cardColors(containerColor = BrancoCard)
+        ) {
+            Column(modifier = Modifier.padding(20.dp)) {
+
+                InfoLinha("Companhia", voo!!.airline?.name)
+                InfoLinha("Voo", voo!!.flight?.iata)
+                InfoLinha("Estado", voo!!.flightStatus?.uppercase())
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Divider()
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                InfoLinha(
+                    "Origem",
+                    "${voo!!.departure?.airport} (${voo!!.departure?.iata})"
+                )
+
+                InfoLinha(
+                    "Destino",
+                    "${voo!!.arrival?.airport} (${voo!!.arrival?.iata})"
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Divider()
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                InfoLinha("Partida prevista", voo!!.departure?.scheduled)
+                InfoLinha("Chegada prevista", voo!!.arrival?.scheduled)
             }
         }
     }

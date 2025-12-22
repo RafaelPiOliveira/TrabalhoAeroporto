@@ -22,6 +22,12 @@ import javax.inject.Inject
 class VooViewModel @Inject constructor(
     private val repository: VooRepository
 ) : ViewModel() {
+    private val VooSelecionado = MutableStateFlow<Voo?>(null)
+    val vooSelecionado: StateFlow<Voo?> = VooSelecionado
+
+    fun setVooSelecionado(voo: Voo) {
+        VooSelecionado.value = voo
+    }
 
     // Flow com voos paginados (para lista principal)
     fun getVoos(): Flow<PagingData<Voo>> =
@@ -31,39 +37,20 @@ class VooViewModel @Inject constructor(
     private val _vooPesquisado = MutableStateFlow<VooResponse?>(null)
     val vooPesquisado: StateFlow<VooResponse?> = _vooPesquisado
 
-    // Estado para voos de partida
+
     private val _voosPartida = MutableStateFlow<VooResponse?>(null)
     val voosPartida: StateFlow<VooResponse?> = _voosPartida
 
-    // Estado para voos de chegada
+
     private val _voosChegada = MutableStateFlow<VooResponse?>(null)
     val voosChegada: StateFlow<VooResponse?> = _voosChegada
 
-    // Estado de loading
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    // Estado de erro
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
-
-    /**
-     * Pesquisar voo por número IATA
-     */
-    fun pesquisarVoo(flightIata: String) {
-        viewModelScope.launch {
-            _isLoading.value = true
-            _error.value = null
-            try {
-                val resultado = repository.pesquisarVoo(flightIata)
-                _vooPesquisado.value = resultado
-            } catch (e: Exception) {
-                _error.value = e.message ?: "Erro ao pesquisar voo"
-            } finally {
-                _isLoading.value = false
-            }
-        }
-    }
 
     /**
      * Obter voos de partida de um aeroporto

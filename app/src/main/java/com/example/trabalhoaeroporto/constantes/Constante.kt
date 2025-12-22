@@ -6,6 +6,6 @@ class Constants {
 
         // Vais precisar de obter uma API key grátis em: https://aviationstack.com/
         // Depois substitui "YOUR_API_KEY" pela tua chave
-        const val API_KEY = "83e6bd63f1bb8492459df0964649ffaa"
+        const val API_KEY = "56e009bb8f021329e6ee4be5b29e762f"
     }
 }

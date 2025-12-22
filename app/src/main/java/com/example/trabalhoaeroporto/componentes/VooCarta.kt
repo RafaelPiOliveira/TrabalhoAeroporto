@@ -220,46 +220,6 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
                     )
                 }
             }
-
-            // Info adicional (Terminal + Portão)
-            if (voo.departure?.terminal != null || voo.departure?.gate != null) {
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Divider(color = CinzaClaro, thickness = 1.dp)
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    voo.departure?.terminal?.let {
-                        InfoChip("Terminal $it", Laranja)
-                        Spacer(modifier = Modifier.width(8.dp))
-                    }
-                    voo.departure?.gate?.let {
-                        InfoChip("Portão $it", AzulCeu)
-                    }
-                }
-            }
         }
-    }
-}
-/**
- * Chip de informação (Terminal, Portão, etc.)
- */
-@Composable
-fun InfoChip(texto: String, cor: Color) {
-    Box(
-        modifier = Modifier
-            .background(cor.copy(alpha = 0.1f), RoundedCornerShape(4.dp))
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-    ) {
-        Text(
-            text = texto,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Medium,
-            color = cor
-        )
     }
 }
