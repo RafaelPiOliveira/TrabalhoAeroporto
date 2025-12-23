@@ -121,7 +121,7 @@ fun BottomNavigationBar(navController: NavController, appItems: List<Destino>) {
                 selected = currentRoute == item.route,
                 onClick = {
                     navController.navigate(item.route) {
-                        popUpTo(0) { saveState = false } // limpa tudo
+                        popUpTo(0) { saveState = false }
                         launchSingleTop = true
                     }
                 }

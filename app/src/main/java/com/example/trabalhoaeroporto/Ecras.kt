@@ -339,7 +339,7 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
                                     voo = voo,
                                     onClick = {
                                         viewModel.setVooSelecionado(voo)
-                                        navController.navigate("ecra02")
+                                        navController.navigate("ecra03")
                                     }
                                 )
                             }
