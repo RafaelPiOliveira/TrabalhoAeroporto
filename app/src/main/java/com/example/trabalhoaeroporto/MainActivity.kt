@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import com.example.trabalhoaeroporto.ui.theme.TrabalhoAeroportoTheme
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
 
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -28,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -36,6 +38,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.trabalhoaeroporto.ui.theme.FundoApp
+import com.example.trabalhoaeroporto.ui.theme.TextoCinzaClaro
 
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -47,7 +51,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TrabalhoAeroportoTheme {
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                Surface(modifier = Modifier.fillMaxSize(), color = FundoApp) {
                     ProgramaPrincipal()
                 }
             }
@@ -58,6 +62,7 @@ class MainActivity : ComponentActivity() {
 fun ProgramaPrincipal() {
     val navController = rememberNavController()
     Scaffold(
+        containerColor = FundoApp,
         bottomBar = { BottomNavigationBar(navController = navController, appItems = Destino.toList) },
         content = { padding ->
             Box(modifier = Modifier.padding(padding)) {
@@ -80,20 +85,16 @@ fun AppNavigation(navController: NavHostController) {
         composable(Destino.Ecra03.route) {
             Ecra03( viewModel )
         }
-        composable(Destino.Ecra04.route) {
-            Ecra04()
-        }
-        composable(Destino.Ecra05.route) {
-            Ecra05()
-        }
     }
 }
 
 @Composable
 fun BottomNavigationBar(navController: NavController, appItems: List<Destino>) {
     BottomNavigation(
-        backgroundColor = colorResource(id = R.color.purple_700),
-        contentColor = Color.White
+        backgroundColor = Color.Transparent,
+        contentColor = TextoCinzaClaro,
+        elevation = 0.dp,
+        modifier = Modifier.height(72.dp)
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
