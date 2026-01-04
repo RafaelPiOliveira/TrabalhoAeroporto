@@ -43,7 +43,7 @@ import com.example.trabalhoaeroporto.componentes.BotaoTipoVoo
 import com.example.trabalhoaeroporto.componentes.CardVoo
 import com.example.trabalhoaeroporto.componentes.CartaoErro
 import com.example.trabalhoaeroporto.componentes.CartaoVazio
-import com.example.trabalhoaeroporto.componentes.HeaderPremium
+import com.example.trabalhoaeroporto.componentes.Header
 import com.example.trabalhoaeroporto.componentes.InfoLinha
 import com.example.trabalhoaeroporto.componentes.ListaVoos
 import com.example.trabalhoaeroporto.ui.theme.AmareloAtraso
@@ -70,12 +70,10 @@ fun Ecra01() {
             .background(FundoApp)
     ) {
 
-        HeaderPremium(
+        Header(
             titulo = "VOOS AO VIVO",
             subtitulo = "Monitorização em tempo real"
         )
-
-
         ListaVoos()
     }
 }
@@ -98,7 +96,7 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
             .fillMaxSize()
             .background(FundoApp)
     ) {
-        HeaderPremium(
+        Header(
             titulo = "PESQUISA AVANÇADA",
             subtitulo = "Voos em tempo real por aeroporto"
         )
@@ -323,7 +321,7 @@ fun Ecra03(viewModel: VooViewModel) {
             .fillMaxSize()
             .background(FundoApp)
     ) {
-        HeaderPremium(
+        Header(
             titulo = "DETALHES DO VOO",
             subtitulo = voo!!.flight?.iata ?: "N/A"
         )

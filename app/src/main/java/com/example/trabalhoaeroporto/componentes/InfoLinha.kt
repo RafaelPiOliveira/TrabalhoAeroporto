@@ -57,7 +57,7 @@ fun InfoLinha(
         }
 }
 @Composable
-fun HeaderPremium( titulo: String, subtitulo: String) {
+fun Header( titulo: String, subtitulo: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
