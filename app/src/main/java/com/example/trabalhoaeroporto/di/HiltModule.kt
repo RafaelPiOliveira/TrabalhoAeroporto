@@ -7,10 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 
-/**
- * Módulo Hilt que fornece o Repository
- * ViewModelComponent - instância criada para cada ViewModel
- */
+
 @Module
 @InstallIn(ViewModelComponent::class)
 class HiltModule {

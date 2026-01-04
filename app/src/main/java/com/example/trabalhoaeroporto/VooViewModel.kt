@@ -14,28 +14,21 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * ViewModel principal da aplicação
- * Gere os dados dos voos e comunica com o Repository
- */
+
 @HiltViewModel
 class VooViewModel @Inject constructor(
     private val repository: VooRepository
 ) : ViewModel() {
-    private val VooSelecionado = MutableStateFlow<Voo?>(null)
-    val vooSelecionado: StateFlow<Voo?> = VooSelecionado
+    private val vooselecionado = MutableStateFlow<Voo?>(null)
+    val vooSelecionado: StateFlow<Voo?> = vooselecionado
 
     fun setVooSelecionado(voo: Voo) {
-        VooSelecionado.value = voo
+        vooselecionado.value = voo
     }
 
-    // Flow com voos paginados (para lista principal)
     fun getVoos(): Flow<PagingData<Voo>> =
         repository.getVoos().cachedIn(viewModelScope)
 
-    // Estado para resultado de pesquisa de voo específico
-    private val _vooPesquisado = MutableStateFlow<VooResponse?>(null)
-    val vooPesquisado: StateFlow<VooResponse?> = _vooPesquisado
 
 
     private val _voosPartida = MutableStateFlow<VooResponse?>(null)
@@ -52,9 +45,7 @@ class VooViewModel @Inject constructor(
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
-    /**
-     * Obter voos de partida de um aeroporto
-     */
+
     fun getVoosPartida(aeroportoIata: String) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -70,9 +61,6 @@ class VooViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Obter voos de chegada de um aeroporto
-     */
     fun getVoosChegada(aeroportoIata: String) {
         viewModelScope.launch {
             _isLoading.value = true

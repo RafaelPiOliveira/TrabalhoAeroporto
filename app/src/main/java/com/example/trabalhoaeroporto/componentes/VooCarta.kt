@@ -27,7 +27,6 @@ import java.util.Locale
 @Composable
 fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
 
-    // Função para formatar hora
     fun formatarHora(isoDate: String?): String {
         if (isoDate == null) return "--:--"
         return try {
@@ -40,7 +39,6 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
         }
     }
 
-    // Cor do status (cores vibrantes tipo Flightradar24)
     val corStatus = when(voo.flightStatus?.lowercase()) {
         "active" -> VerdeAtivo
         "scheduled" -> AzulCeu
@@ -74,7 +72,6 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = FundoCard)
     ) {
-        // Barra dourada no topo
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -93,7 +90,6 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
         )
 
         Column(modifier = Modifier.fillMaxWidth()) {
-            // Barra dourada superior
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -116,14 +112,13 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
                     .fillMaxWidth()
                     .padding(20.dp)
             ) {
-                // Header: Número do voo + Status
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        // Número do voo
+
                         Text(
                             text = voo.flight?.iata ?: "N/A",
                             fontSize = 32.sp,
@@ -134,7 +129,7 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
 
                         Spacer(modifier = Modifier.height(6.dp))
 
-                        // Companhia aérea
+
                         Text(
                             text = voo.airline?.name ?: "Companhia Desconhecida",
                             fontSize = 14.sp,
@@ -143,7 +138,7 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
                         )
                     }
 
-                    // Badge de status com glow
+
                     Box(
                         modifier = Modifier
                             .shadow(
@@ -171,10 +166,8 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Linha divisória dourada sutil
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -192,13 +185,12 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Rota: Partida → Chegada
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Top
                 ) {
-                    // PARTIDA
                     Column(
                         modifier = Modifier.weight(1f),
                         horizontalAlignment = Alignment.Start
@@ -213,7 +205,7 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        // Hora
+
                         Text(
                             text = formatarHora(voo.departure?.scheduled),
                             fontSize = 36.sp,
@@ -224,7 +216,7 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        // Código IATA
+
                         Text(
                             text = voo.departure?.iata ?: "N/A",
                             fontSize = 24.sp,
@@ -232,7 +224,7 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
                             color = AzulCiano
                         )
 
-                        // Nome do aeroporto
+
                         Text(
                             text = voo.departure?.airport ?: "",
                             fontSize = 11.sp,
@@ -243,33 +235,15 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
                         )
                     }
 
-                    // Ícone de avião central com linha
+
                     Column(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(
-                            text = "✈",
-                            fontSize = 32.sp,
-                            color = DouradoPrincipal
-                        )
                         Spacer(modifier = Modifier.height(6.dp))
-                        Box(
-                            modifier = Modifier
-                                .width(50.dp)
-                                .height(2.dp)
-                                .background(
-                                    Brush.horizontalGradient(
-                                        colors = listOf(
-                                            AzulCiano,
-                                            DouradoPrincipal
-                                        )
-                                    )
-                                )
-                        )
                     }
 
-                    // CHEGADA
+
                     Column(
                         modifier = Modifier.weight(1f),
                         horizontalAlignment = Alignment.End
@@ -284,7 +258,7 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        // Hora
+
                         Text(
                             text = formatarHora(voo.arrival?.scheduled),
                             fontSize = 36.sp,
@@ -295,7 +269,7 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        // Código IATA
+
                         Text(
                             text = voo.arrival?.iata ?: "N/A",
                             fontSize = 24.sp,
@@ -303,7 +277,7 @@ fun CardVoo(voo: Voo, onClick: () -> Unit = {}) {
                             color = AzulCiano
                         )
 
-                        // Nome do aeroporto
+
                         Text(
                             text = voo.arrival?.airport ?: "",
                             fontSize = 11.sp,
@@ -334,11 +308,6 @@ fun CartaoErro(mensagem: String) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "⚠",
-                fontSize = 24.sp,
-                modifier = Modifier.padding(end = 12.dp)
-            )
-            Text(
                 text = mensagem,
                 color = VermelhoAlerta,
                 fontSize = 14.sp,
@@ -348,9 +317,7 @@ fun CartaoErro(mensagem: String) {
     }
 }
 
-/**
- * Componente reutilizável: Cartão Vazio (sem resultados)
- */
+
 @Composable
 fun CartaoVazio(mensagem: String, descricao: String) {
     Card(
@@ -368,11 +335,6 @@ fun CartaoVazio(mensagem: String, descricao: String) {
                 .padding(48.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "✈",
-                fontSize = 56.sp,
-                color = TextoCinzaMedio
-            )
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = mensagem,

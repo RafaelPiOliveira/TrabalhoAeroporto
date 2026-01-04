@@ -1,6 +1,5 @@
 package com.example.trabalhoaeroporto
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,7 +21,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -30,7 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +36,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -51,9 +48,6 @@ import com.example.trabalhoaeroporto.componentes.InfoLinha
 import com.example.trabalhoaeroporto.componentes.ListaVoos
 import com.example.trabalhoaeroporto.ui.theme.AmareloAtraso
 import com.example.trabalhoaeroporto.ui.theme.AzulCeu
-
-import com.example.trabalhoaeroporto.ui.theme.AzulEscuroPrincipal
-
 import com.example.trabalhoaeroporto.ui.theme.DouradoPrincipal
 import com.example.trabalhoaeroporto.ui.theme.FundoApp
 import com.example.trabalhoaeroporto.ui.theme.FundoCard
@@ -75,27 +69,25 @@ fun Ecra01() {
             .fillMaxSize()
             .background(FundoApp)
     ) {
-        // Header Premium com gradiente
+
         HeaderPremium(
-            icone = "✈",
             titulo = "VOOS AO VIVO",
             subtitulo = "Monitorização em tempo real"
         )
 
-        // Lista de voos (usa Paging conforme aprendeste)
+
         ListaVoos()
     }
 }
 
-// ==================== ECRÃ 02 ====================
+
 @Composable
 fun Ecra02(viewModel: VooViewModel, navController: NavController) {
-    // Estados conforme aprendeste (remember + mutableStateOf)
-    var aeroportoCodigo by remember { mutableStateOf("") }
-    var tipoVoo by remember { mutableStateOf("partidas") }
-    var mostrarResultados by remember { mutableStateOf(false) }
 
-    // Observar estados do ViewModel (LiveData pattern)
+    var aeroportoCodigo by rememberSaveable { mutableStateOf("") }
+    var tipoVoo by rememberSaveable { mutableStateOf("partidas") }
+
+
     val voosPartida by viewModel.voosPartida.collectAsState()
     val voosChegada by viewModel.voosChegada.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
@@ -107,14 +99,13 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
             .background(FundoApp)
     ) {
         HeaderPremium(
-            icone = "🔍",
             titulo = "PESQUISA AVANÇADA",
             subtitulo = "Voos em tempo real por aeroporto"
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Card de pesquisa premium (Surface para aplicar estilos)
+
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -128,7 +119,7 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
             colors = CardDefaults.cardColors(containerColor = FundoCard)
         ) {
             Column {
-                // Barra dourada topo
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -147,7 +138,6 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
                 )
 
                 Column(modifier = Modifier.padding(28.dp)) {
-                    // TextField conforme aprendeste
                     Text(
                         text = "CÓDIGO DO AEROPORTO",
                         fontSize = 11.sp,
@@ -178,7 +168,6 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    // Botões de seleção (Row conforme aprendeste)
                     Text(
                         text = "TIPO DE VOO",
                         fontSize = 11.sp,
@@ -210,7 +199,6 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
 
                     Spacer(modifier = Modifier.height(28.dp))
 
-                    // Botão pesquisar com gradiente
                     Button(
                         onClick = {
                             if (aeroportoCodigo.isNotBlank()) {
@@ -219,7 +207,6 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
                                 } else {
                                     viewModel.getVoosChegada(aeroportoCodigo)
                                 }
-                                mostrarResultados = true
                             }
                         },
                         modifier = Modifier
@@ -287,16 +274,12 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Mostrar erro (if conforme aprendeste)
         error?.let {
             CartaoErro(mensagem = it)
             Spacer(modifier = Modifier.height(20.dp))
         }
 
-        // Resultados (LazyColumn com items conforme aprendeste)
-        if (mostrarResultados) {
             val voos = if (tipoVoo == "partidas") voosPartida else voosChegada
-            val titulo = if (tipoVoo == "partidas") "PARTIDAS" else "CHEGADAS"
 
             voos?.let { response ->
                 if (response.data.isEmpty()) {
@@ -305,27 +288,7 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
                         descricao = "Sem voos em tempo real para $aeroportoCodigo"
                     )
                 } else {
-                    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(vertical = 16.dp)
-                        ) {
-                            Spacer(modifier = Modifier.width(14.dp))
-                            Text(
-                                text = aeroportoCodigo,
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = TextoBranco
-                            )
-                        }
-
-                        Text(
-                            text = "${response.data.size} voos ativos",
-                            fontSize = 13.sp,
-                            color = TextoCinzaMedio,
-                            modifier = Modifier.padding(bottom = 14.dp)
-                        )
-
+                    Column(modifier = Modifier.fillMaxWidth().weight(1f)) {
                         LazyColumn {
                             items(response.data) { voo ->
                                 CardVoo(
@@ -342,7 +305,6 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
             }
         }
     }
-}
 
 @Composable
 fun Ecra03(viewModel: VooViewModel) {
@@ -362,14 +324,12 @@ fun Ecra03(viewModel: VooViewModel) {
             .background(FundoApp)
     ) {
         HeaderPremium(
-            icone = "📋",
             titulo = "DETALHES DO VOO",
             subtitulo = voo!!.flight?.iata ?: "N/A"
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Card principal de detalhes
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -395,7 +355,6 @@ fun Ecra03(viewModel: VooViewModel) {
                     )
             ) {
                 Column {
-                    // Barra dourada superior
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -418,16 +377,14 @@ fun Ecra03(viewModel: VooViewModel) {
                             .fillMaxWidth()
                             .padding(28.dp)
                     ) {
-                        // Companhia
+
                         InfoLinha(
-                            icone = "✈",
                             titulo = "COMPANHIA AÉREA",
                             valor = voo!!.airline?.name
                         )
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        // Status
                         val corStatus = when(voo!!.flightStatus?.lowercase()) {
                             "active" -> VerdeAtivo
                             "scheduled" -> AzulCeu
@@ -443,7 +400,7 @@ fun Ecra03(viewModel: VooViewModel) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = "🔔 STATUS",
+                                text = "STATUS",
                                 fontSize = 11.sp,
                                 color = DouradoPrincipal,
                                 fontWeight = FontWeight.Bold,
@@ -480,7 +437,6 @@ fun Ecra03(viewModel: VooViewModel) {
 
                         Spacer(modifier = Modifier.height(28.dp))
 
-                        // Linha divisória
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -498,25 +454,22 @@ fun Ecra03(viewModel: VooViewModel) {
 
                         Spacer(modifier = Modifier.height(28.dp))
 
-                        // Origem
+
                         InfoLinha(
-                            icone = "🛫",
                             titulo = "ORIGEM",
                             valor = "${voo!!.departure?.airport} (${voo!!.departure?.iata})"
                         )
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        // Destino
+
                         InfoLinha(
-                            icone = "🛬",
                             titulo = "DESTINO",
                             valor = "${voo!!.arrival?.airport} (${voo!!.arrival?.iata})"
                         )
 
                         Spacer(modifier = Modifier.height(28.dp))
 
-                        // Linha divisória
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -534,16 +487,15 @@ fun Ecra03(viewModel: VooViewModel) {
 
                         Spacer(modifier = Modifier.height(28.dp))
 
-                        // Horários
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 InfoLinha(
-                                    icone = "🕐",
                                     titulo = "PARTIDA",
-                                    valor = voo!!.departure?.scheduled,
+                                    valor = voo!!.departure?.scheduled?.substring(0, 16)
+                                        ?.replace("T", " "),
                                     compacto = true
                                 )
                             }
@@ -552,9 +504,9 @@ fun Ecra03(viewModel: VooViewModel) {
 
                             Column(modifier = Modifier.weight(1f)) {
                                 InfoLinha(
-                                    icone = "🕐",
                                     titulo = "CHEGADA",
-                                    valor = voo!!.arrival?.scheduled,
+                                    valor = voo!!.arrival?.scheduled?.substring(0, 16)
+                                        ?.replace("T", " "),
                                     compacto = true
                                 )
                             }

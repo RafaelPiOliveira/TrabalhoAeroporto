@@ -11,23 +11,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-
 import com.example.trabalhoaeroporto.ui.theme.TrabalhoAeroportoTheme
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
-
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-
 import androidx.compose.material3.Surface
-
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,7 +32,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.trabalhoaeroporto.ui.theme.FundoApp
 import com.example.trabalhoaeroporto.ui.theme.TextoCinzaClaro
-
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -116,9 +107,9 @@ fun BottomNavigationBar(navController: NavController, appItems: List<Destino>) {
                         )
                     )
                 },
-                selectedContentColor = Color.White, // esta instrução devia funcionar para o efeito (animação), para o ícone e para a cor do texto, mas só funciona para o efeito
-                unselectedContentColor = Color.White.copy(0.4f), // esta instrução não funciona, por isso resolve-se acima no 'tint' do icon e na 'color' da label
-                alwaysShowLabel = true, // colocar 'false' significa que o texto só aparece debaixo do ícone selecionado (em vez de debaixo de todos)
+                selectedContentColor = Color.White,
+                unselectedContentColor = Color.White.copy(0.4f),
+                alwaysShowLabel = true,
                 selected = currentRoute == item.route,
                 onClick = {
                     navController.navigate(item.route) {

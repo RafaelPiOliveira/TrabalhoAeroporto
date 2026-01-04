@@ -39,7 +39,6 @@ fun ListaVoos() {
             }
         }
 
-        // Estado de carregamento inicial
         when (voos.loadState.refresh) {
             is LoadState.Error -> {
                 val errorMsg = (voos.loadState.refresh as LoadState.Error).error.message
@@ -67,7 +66,7 @@ fun ListaVoos() {
             else -> {}
         }
 
-        // Estado de carregamento de mais itens (paginação)
+
         when (voos.loadState.append) {
             is LoadState.Error -> {
                 val errorMsg = (voos.loadState.append as LoadState.Error).error.message

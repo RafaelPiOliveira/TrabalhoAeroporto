@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material3.*
 
 import com.example.trabalhoaeroporto.ui.theme.DouradoPrincipal
 import com.example.trabalhoaeroporto.ui.theme.FundoApp
@@ -30,18 +29,13 @@ import com.example.trabalhoaeroporto.ui.theme.TextoBranco
 import com.example.trabalhoaeroporto.ui.theme.TextoCinzaMedio
 
 @Composable
-fun InfoLinha(  icone: String,
+fun InfoLinha(
     titulo: String,
     valor: String?,
     compacto: Boolean = false
     ) {
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = icone,
-                    fontSize = if (compacto) 16.sp else 18.sp,
-                    modifier = Modifier.padding(end = 8.dp)
-                )
                 Text(
                     text = titulo,
                     fontSize = if (compacto) 10.sp else 11.sp,
@@ -63,7 +57,7 @@ fun InfoLinha(  icone: String,
         }
 }
 @Composable
-fun HeaderPremium(icone: String, titulo: String, subtitulo: String) {
+fun HeaderPremium( titulo: String, subtitulo: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -78,7 +72,7 @@ fun HeaderPremium(icone: String, titulo: String, subtitulo: String) {
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
-                text = "$icone $titulo",
+                text = " $titulo",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = TextoBranco,
@@ -95,7 +89,6 @@ fun HeaderPremium(icone: String, titulo: String, subtitulo: String) {
             )
         }
 
-        // Linha dourada inferior
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -116,9 +109,7 @@ fun HeaderPremium(icone: String, titulo: String, subtitulo: String) {
     }
 }
 
-/**
- * Componente reutilizável: Botão Tipo de Voo
- */
+
 @Composable
 fun BotaoTipoVoo(
     texto: String,

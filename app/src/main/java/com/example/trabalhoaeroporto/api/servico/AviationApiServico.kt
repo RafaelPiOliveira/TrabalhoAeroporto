@@ -26,23 +26,6 @@ interface AviationApiService {
         @Query("limit") limit: Int = 20,
         @Query("offset") offset: Int = 0
     ): VooResponse
-
-    /**
-     * Pesquisar voos por número de voo
-     *
-     * @param flightIata - Código IATA do voo (ex: "AA100")
-     */
-    @GET("flights")
-    suspend fun pesquisarVoo(
-        @Query("access_key") apiKey: String = Constants.API_KEY,
-        @Query("flight_iata") flightIata: String
-    ): VooResponse
-
-    /**
-     * Obter voos de um aeroporto específico (partidas)
-     *
-     * @param depIata - Código IATA do aeroporto de partida (ex: "JFK")
-     */
     @GET("flights")
     suspend fun getVoosPartida(
         @Query("access_key") apiKey: String = Constants.API_KEY,
@@ -51,11 +34,7 @@ interface AviationApiService {
         @Query("offset") offset: Int = 0
     ): VooResponse
 
-    /**
-     * Obter voos de um aeroporto específico (chegadas)
-     *
-     * @param arrIata - Código IATA do aeroporto de chegada (ex: "LAX")
-     */
+
     @GET("flights")
     suspend fun getVoosChegada(
         @Query("access_key") apiKey: String = Constants.API_KEY,

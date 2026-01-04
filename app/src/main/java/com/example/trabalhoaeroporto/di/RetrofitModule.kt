@@ -10,10 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-/**
- * Módulo Hilt que fornece a instância do Retrofit
- * Singleton - só existe uma instância em toda a app
- */
+
 @Module
 @InstallIn(SingletonComponent::class)
 class RetrofitModule {
