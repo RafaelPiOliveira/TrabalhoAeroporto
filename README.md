@@ -22,7 +22,7 @@ A aplicação está organizada em **3 ecrãs principais**:
 
 ### Voos ao Vivo
 
-- Lista paginada de voos obtidos através da API.
+Lista paginada de voos obtidos através da API.
 
 ### Pesquisa
 
@@ -33,6 +33,7 @@ Para encontrar voos, é possível fazer uma pesquisa utilizando o código **IATA
 Este ecrã apresenta a informação detalhada do voo selecionado. São disponibilizados dados como o número do voo, a companhia aérea, o estado atual do voo, os horários de partida e chegada, bem como os aeroportos de origem e destino.
 
 Esta funcionalidade permite ao utilizador consultar, de forma clara e organizada, todas as informações relevantes.
+
 ---
 
 ## Credenciais e API
