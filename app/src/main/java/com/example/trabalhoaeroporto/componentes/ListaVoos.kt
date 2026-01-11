@@ -12,16 +12,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
+import com.example.trabalhoaeroporto.Destino
 import com.example.trabalhoaeroporto.VooViewModel
 
 
 @Composable
-fun ListaVoos() {
-    val viewModel = hiltViewModel<VooViewModel>()
+fun ListaVoos(viewModel: VooViewModel, navController: NavController) {
     val voos = viewModel.getVoos().collectAsLazyPagingItems()
     val oContexto = LocalContext.current
 
@@ -35,7 +36,10 @@ fun ListaVoos() {
         ) { index ->
             val item = voos[index]
             item?.let {
-                CardVoo(voo = it)
+                CardVoo(voo = it, onClick = {
+                    viewModel.setVooSelecionado(it)
+                    navController.navigate(Destino.Ecra03.route)
+                })
             }
         }
 

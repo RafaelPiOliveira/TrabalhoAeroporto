@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -34,7 +35,9 @@ fun InfoLinha(
     valor: String?,
     compacto: Boolean = false
     ) {
-        Column {
+        Column (
+            horizontalAlignment = if (compacto) Alignment.CenterHorizontally else Alignment.Start
+        ){
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = titulo,
@@ -52,7 +55,8 @@ fun InfoLinha(
                 fontSize = if (compacto) 14.sp else 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = TextoBranco,
-                modifier = Modifier.padding(start = if (compacto) 24.dp else 26.dp)
+                textAlign = if (compacto) TextAlign.Center else TextAlign.Start,
+                modifier = if (!compacto) Modifier.padding(start = 26.dp) else Modifier
             )
         }
 }

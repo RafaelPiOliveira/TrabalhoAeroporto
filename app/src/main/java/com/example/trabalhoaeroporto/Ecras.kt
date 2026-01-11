@@ -63,7 +63,7 @@ import com.example.trabalhoaeroporto.ui.theme.VermelhoAlerta
 
 
 @Composable
-fun Ecra01() {
+fun Ecra01(viewModel: VooViewModel, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -74,7 +74,7 @@ fun Ecra01() {
             titulo = "VOOS AO VIVO",
             subtitulo = "Monitorização em tempo real"
         )
-        ListaVoos()
+        ListaVoos(viewModel= viewModel, navController= navController)
     }
 }
 
@@ -101,7 +101,7 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
             subtitulo = "Voos em tempo real por aeroporto"
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
 
         Card(
@@ -110,7 +110,7 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
                 .padding(horizontal = 16.dp)
                 .shadow(
                     elevation = 16.dp,
-                    shape = RoundedCornerShape(24.dp),
+                    shape = RoundedCornerShape(20.dp),
                     spotColor = DouradoPrincipal.copy(alpha = 0.5f)
                 ),
             shape = RoundedCornerShape(24.dp),
@@ -121,7 +121,7 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(4.dp)
+                        .height(3.dp)
                         .background(
                             Brush.horizontalGradient(
                                 colors = listOf(
@@ -135,7 +135,7 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
                         )
                 )
 
-                Column(modifier = Modifier.padding(28.dp)) {
+                Column(modifier = Modifier.padding(20.dp)) {
                     Text(
                         text = "CÓDIGO DO AEROPORTO",
                         fontSize = 11.sp,
@@ -144,7 +144,7 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
                         letterSpacing = 1.2.sp
                     )
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
                         value = aeroportoCodigo,
@@ -152,7 +152,7 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
                         placeholder = {
                             Text("OPO, LIS, JFK, LAX...", color = TextoCinzaEscuro)
                         },
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().height(52.dp),
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = DouradoPrincipal,
@@ -161,24 +161,24 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
                             unfocusedTextColor = TextoCinzaClaro,
                             cursorColor = DouradoPrincipal
                         ),
-                        shape = RoundedCornerShape(14.dp)
+                        shape = RoundedCornerShape(12.dp)
                     )
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
                         text = "TIPO DE VOO",
-                        fontSize = 11.sp,
+                        fontSize = 10.sp,
                         color = DouradoPrincipal,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 1.2.sp
                     )
 
-                    Spacer(modifier = Modifier.height(14.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(14.dp)
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         BotaoTipoVoo(
                             texto = "PARTIDAS",
@@ -195,7 +195,7 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(28.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
                     Button(
                         onClick = {
@@ -209,7 +209,7 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(64.dp)
+                            .height(56.dp)
                             .shadow(
                                 elevation = 10.dp,
                                 shape = RoundedCornerShape(14.dp),
@@ -270,11 +270,11 @@ fun Ecra02(viewModel: VooViewModel, navController: NavController) {
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         error?.let {
             CartaoErro(mensagem = it)
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(12.dp))
         }
 
             val voos = if (tipoVoo == "partidas") voosPartida else voosChegada

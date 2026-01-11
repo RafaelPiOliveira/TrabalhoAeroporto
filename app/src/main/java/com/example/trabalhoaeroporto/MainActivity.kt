@@ -68,7 +68,7 @@ fun AppNavigation(navController: NavHostController) {
     val viewModel: VooViewModel = hiltViewModel()
     NavHost(navController, startDestination = Destino.Ecra01.route) {
         composable(Destino.Ecra01.route) {
-            Ecra01()
+            Ecra01(viewModel, navController)
         }
         composable(Destino.Ecra02.route) {
             Ecra02(viewModel,navController)
