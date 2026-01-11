@@ -392,6 +392,15 @@ fun Ecra03(viewModel: VooViewModel) {
                             else -> TextoCinzaMedio
                         }
 
+                        val textoStatus = when(voo!!.flightStatus?.lowercase()) {
+                            "active" -> "EM VOO"
+                            "scheduled" -> "AGENDADO"
+                            "landed" -> "ATERRADO"
+                            "cancelled" -> "CANCELADO"
+                            "delayed" -> "ATRASADO"
+                            else -> voo!!.flightStatus?.uppercase() ?: "N/A"
+                        }
+
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
@@ -424,7 +433,7 @@ fun Ecra03(viewModel: VooViewModel) {
                                     .padding(horizontal = 20.dp, vertical = 12.dp)
                             ) {
                                 Text(
-                                    text = voo!!.flightStatus?.uppercase() ?: "N/A",
+                                    text = textoStatus,
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.ExtraBold,
                                     color = Color.White,

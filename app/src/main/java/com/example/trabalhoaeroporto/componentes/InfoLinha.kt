@@ -76,7 +76,7 @@ fun Header( titulo: String, subtitulo: String) {
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
-                text = " $titulo",
+                text = titulo,
                 fontSize = 30.sp,
                 fontWeight = FontWeight.ExtraBold,
                 color = TextoBranco,
